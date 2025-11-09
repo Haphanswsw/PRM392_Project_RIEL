@@ -8,6 +8,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.prn392_project.DAO.BookingDatabaseDAO;
+import com.example.prn392_project.DAO.ProfileDatabaseDAO;
+
 public class ArtistDashboardActivity extends AppCompatActivity {
 
     private SessionManager sessionManager;
@@ -17,8 +20,8 @@ public class ArtistDashboardActivity extends AppCompatActivity {
     private Button btnManageProfile, btnManageAvailability, btnViewBookingRequests, btnViewReviews, btnLogout;
 
     // Bạn sẽ cần tạo các DAO khác để lấy dữ liệu
-    // private BookingDatabaseDAO bookingDAO;
-    // private ProfileDatabaseDAO profileDAO;
+     private BookingDatabaseDAO bookingDAO;
+     private ProfileDatabaseDAO profileDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +46,8 @@ public class ArtistDashboardActivity extends AppCompatActivity {
         btnLogout = findViewById(R.id.btnLogout);
 
         // 4. Khởi tạo các DAO cần thiết
-        // bookingDAO = new BookingDatabaseDAO(this);
-        // profileDAO = new ProfileDatabaseDAO(this);
+         bookingDAO = new BookingDatabaseDAO(this);
+         profileDAO = new ProfileDatabaseDAO(this);
 
         // 5. Tải dữ liệu lên Dashboard
         loadDashboardData(artistName);
@@ -59,10 +62,10 @@ public class ArtistDashboardActivity extends AppCompatActivity {
 
         // --- Lấy dữ liệu thống kê (VÍ DỤ) ---
         // (Bạn cần tự viết hàm này trong DAO của mình)
-        // int pendingCount = bookingDAO.getPendingBookingsCount(artistId);
+         int pendingCount = bookingDAO.getPendingBookingsCount(artistId);
 
         // Dữ liệu giả (placeholder)
-        int pendingCount = 3; // <-- Thay thế bằng lệnh gọi DAO
+//        int pendingCount = 3; // <-- Thay thế bằng lệnh gọi DAO
 
         tvPendingBookingsCount.setText(String.valueOf(pendingCount));
 

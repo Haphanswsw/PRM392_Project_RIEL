@@ -36,6 +36,30 @@
             android:label="Đánh giá của tôi"
             android:exported="false"/>
         <activity
+            android:name=".CustomerHomeActivity"
+            android:label="Trang chủ"
+            android:exported="false"/>
+        <activity
+            android:name=".ArtistDetailActivity"
+            android:label="Chi tiết Nghệ sĩ"
+            android:exported="false"/>
+        <activity
+            android:name=".CreateBookingActivity"
+            android:label="Đặt lịch"
+            android:exported="false"/>
+        <activity
+            android:name=".CustomerBookingsActivity"
+            android:label="Lịch đặt của tôi"
+            android:exported="false"/>
+        <activity
+            android:name=".AddReviewActivity"
+            android:label="Viết đánh giá"
+            android:exported="false"/>
+        <activity
+            android:name=".CustomerProfileActivity"
+            android:label="Hồ sơ của tôi"
+            android:exported="false"/>
+        <activity
             android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>

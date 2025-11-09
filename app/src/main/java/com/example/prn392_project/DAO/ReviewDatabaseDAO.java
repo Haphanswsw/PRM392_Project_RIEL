@@ -1,15 +1,20 @@
 package com.example.prn392_project.DAO;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.example.prn392_project.Models.Review;
 import com.example.prn392_project.db.DatabaseHelper;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class ReviewDatabaseDAO {
 
@@ -100,6 +105,77 @@ public class ReviewDatabaseDAO {
             }
         }
         return reviews;
+    }
+
+    /**
+     * Thêm đánh giá mới VÀ cập nhật điểm trung bình của nghệ sĩ (Transaction)
+     */
+    public boolean addReview(int bookingId, int customerId, int artistId, int rating, String comment) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.beginTransaction(); // Bắt đầu Transaction
+
+        try {
+            // Bước 1: Thêm review mới
+            ContentValues reviewValues = new ContentValues();
+            reviewValues.put(DatabaseHelper.COLUMN_REVIEW_BOOKING_ID, bookingId);
+            reviewValues.put(DatabaseHelper.COLUMN_REVIEW_CUSTOMER_ID, customerId);
+            reviewValues.put(DatabaseHelper.COLUMN_REVIEW_ARTIST_ID, artistId);
+            reviewValues.put(DatabaseHelper.COLUMN_REVIEW_RATING, rating);
+            reviewValues.put(DatabaseHelper.COLUMN_REVIEW_COMMENT, comment);
+            reviewValues.put(DatabaseHelper.COLUMN_REVIEW_CREATED_AT,
+                    new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US).format(new Date()));
+
+            long result = db.insert(DatabaseHelper.TABLE_REVIEWS, null, reviewValues);
+            if (result == -1) {
+                return false; // Lỗi khi thêm
+            }
+
+            // Bước 2: Tính toán lại điểm trung bình
+            Cursor cursor = null;
+            double avgRating = 0.0;
+            try {
+                String query = "SELECT AVG(" + DatabaseHelper.COLUMN_REVIEW_RATING + ") FROM " + DatabaseHelper.TABLE_REVIEWS +
+                        " WHERE " + DatabaseHelper.COLUMN_REVIEW_ARTIST_ID + " = ?";
+                cursor = db.rawQuery(query, new String[]{String.valueOf(artistId)});
+                if (cursor != null && cursor.moveToFirst()) {
+                    avgRating = cursor.getDouble(0);
+                }
+            } finally {
+                if (cursor != null) cursor.close();
+            }
+
+            // Bước 3: Cập nhật điểm trung bình vào bảng artist_profiles
+            ContentValues profileValues = new ContentValues();
+            profileValues.put(DatabaseHelper.COLUMN_PROFILE_RATING_AVG, avgRating);
+            String selection = DatabaseHelper.COLUMN_PROFILE_USER_ID + " = ?";
+            db.update(DatabaseHelper.TABLE_ARTIST_PROFILES, profileValues, selection, new String[]{String.valueOf(artistId)});
+
+            // Đánh dấu transaction thành công
+            db.setTransactionSuccessful();
+            return true;
+        } catch (Exception e) {
+            Log.e("ReviewDAO", "Lỗi khi thêm review (transaction)", e);
+            return false;
+        } finally {
+            db.endTransaction(); // Kết thúc transaction
+        }
+    }
+
+    /**
+     * (Hàm này có thể không cần nữa nếu chúng ta dùng JOIN, nhưng vẫn tốt để có)
+     * Kiểm tra xem booking đã được đánh giá chưa
+     */
+    public boolean checkIfReviewExists(int bookingId) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = null;
+        try {
+            String query = "SELECT 1 FROM " + DatabaseHelper.TABLE_REVIEWS +
+                    " WHERE " + DatabaseHelper.COLUMN_REVIEW_BOOKING_ID + " = ? LIMIT 1";
+            cursor = db.rawQuery(query, new String[]{String.valueOf(bookingId)});
+            return (cursor != null && cursor.getCount() > 0);
+        } finally {
+            if (cursor != null) cursor.close();
+        }
     }
 
     private Review cursorToReview(Cursor cursor, String customerNameCol) {

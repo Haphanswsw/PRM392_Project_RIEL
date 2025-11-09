@@ -85,9 +85,8 @@ public class LoginActivity extends AppCompatActivity {
                 Intent intent = new Intent(LoginActivity.this, ArtistDashboardActivity.class);
                 startActivity(intent);
             } else {
-                // Tới màn hình Customer Home
-                // Intent intent = new Intent(LoginActivity.this, CustomerHomeActivity.class);
-                // startActivity(intent);
+                Intent intent = new Intent(LoginActivity.this, CustomerHomeActivity.class);
+                startActivity(intent);
             }
 
             finish(); // Đóng LoginActivity

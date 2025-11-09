@@ -109,7 +109,43 @@ public class AvailabilityDatabaseDAO {
         }
         return rowsAffected > 0;
     }
+    /**
+     * Lấy tất cả các lịch rảnh CÒN TRỐNG (chưa bị đặt) của một nghệ sĩ
+     */
+    public List<ArtistAvailability> getAvailableSlotsByArtist(int artistId) {
+        List<ArtistAvailability> availabilities = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = null;
 
+        try {
+            // Thêm điều kiện is_booked = 0
+            String selection = DatabaseHelper.COLUMN_AVAIL_ARTIST_ID + " = ? AND " +
+                    DatabaseHelper.COLUMN_AVAIL_IS_BOOKED + " = 0";
+            String[] selectionArgs = { String.valueOf(artistId) };
+            String orderBy = DatabaseHelper.COLUMN_AVAIL_START_TIME + " ASC";
+
+            cursor = db.query(
+                    DatabaseHelper.TABLE_ARTIST_AVAILABILITIES,
+                    null, // Lấy tất cả các cột
+                    selection,
+                    selectionArgs,
+                    null, null, orderBy
+            );
+
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    availabilities.add(cursorToAvailability(cursor));
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return availabilities;
+    }
     private ArtistAvailability cursorToAvailability(Cursor cursor) {
         int id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_AVAIL_ID));
         int artistId = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_AVAIL_ARTIST_ID));

@@ -11,12 +11,19 @@ public class Booking {
     private String status;
     private double price;
 
+    private String artistName; // Lấy từ JOIN
+    private boolean isReviewed;
+
     // Trường này được thêm vào từ câu lệnh JOIN
     private String customerName;
 
+    public Booking() {
+    }
+
     // Constructor để tạo đối tượng từ CSDL
     public Booking(int id, int customerId, int artistId, String eventTitle, String eventLocation,
-                   String startTime, String endTime, String status, double price, String customerName) {
+                   String startTime, String endTime, String status, double price,
+                   String artistName, boolean isReviewed) { // Thêm 2 tham số mới
         this.id = id;
         this.customerId = customerId;
         this.artistId = artistId;
@@ -26,9 +33,12 @@ public class Booking {
         this.endTime = endTime;
         this.status = status;
         this.price = price;
-        this.customerName = customerName;
+        this.artistName = artistName; // Thêm
+        this.isReviewed = isReviewed; // Thêm
     }
 
+    public String getArtistName() { return artistName; }
+    public boolean isReviewed() { return isReviewed; }
     // --- Getters ---
     public int getId() { return id; }
     public int getCustomerId() { return customerId; }
@@ -40,4 +50,52 @@ public class Booking {
     public String getStatus() { return status; }
     public double getPrice() { return price; }
     public String getCustomerName() { return customerName; }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
+    }
+
+    public void setArtistId(int artistId) {
+        this.artistId = artistId;
+    }
+
+    public void setEventTitle(String eventTitle) {
+        this.eventTitle = eventTitle;
+    }
+
+    public void setEventLocation(String eventLocation) {
+        this.eventLocation = eventLocation;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setArtistName(String artistName) {
+        this.artistName = artistName;
+    }
+
+    public void setReviewed(boolean reviewed) {
+        isReviewed = reviewed;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
 }

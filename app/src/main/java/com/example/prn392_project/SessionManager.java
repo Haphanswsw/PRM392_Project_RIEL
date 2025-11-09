@@ -85,4 +85,12 @@ public class SessionManager {
             context.startActivity(i);
         }
     }
+
+    /**
+     * THÊM MỚI: Cập nhật tên của người dùng trong session
+     */
+    public void updateUserFullName(String newFullName) {
+        editor.putString(KEY_USER_FULL_NAME, newFullName);
+        editor.commit();
+    }
 }

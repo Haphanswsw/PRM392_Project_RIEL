@@ -154,4 +154,72 @@ public class UserDatabaseDAO {
             }
         }
     }
+    /**
+     * CẬP NHẬT: Lấy đầy đủ thông tin của một user bằng ID
+     */
+    public User getUserById(int userId) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = null;
+        try {
+            String selection = DatabaseHelper.COLUMN_USER_ID + " = ?";
+            String[] selectionArgs = { String.valueOf(userId) };
+
+            cursor = db.query(
+                    DatabaseHelper.TABLE_USERS,
+                    null, // Lấy tất cả các cột
+                    selection,
+                    selectionArgs,
+                    null, null, null
+            );
+
+            if (cursor != null && cursor.moveToFirst()) {
+                return cursorToUser(cursor); // Gọi hàm helper
+            }
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+    /**
+     * THÊM MỚI: Cập nhật thông tin hồ sơ khách hàng
+     */
+    public boolean updateCustomerProfile(int userId, String fullName, String phone, String bio, String avatarUrl) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(DatabaseHelper.COLUMN_USER_FULL_NAME, fullName);
+        values.put(DatabaseHelper.COLUMN_USER_PHONE, phone);
+        values.put(DatabaseHelper.COLUMN_USER_BIO, bio);
+        values.put(DatabaseHelper.COLUMN_USER_AVATAR_URL, avatarUrl);
+
+        String selection = DatabaseHelper.COLUMN_USER_ID + " = ?";
+        String[] selectionArgs = { String.valueOf(userId) };
+
+        try {
+            int rowsAffected = db.update(DatabaseHelper.TABLE_USERS, values, selection, selectionArgs);
+            return rowsAffected > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * THÊM MỚI: Hàm trợ giúp để chuyển Cursor sang User
+     */
+    private User cursorToUser(Cursor cursor) {
+        int id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_USER_ID));
+        String email = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_USER_EMAIL));
+        String fullName = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_USER_FULL_NAME));
+        String phone = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_USER_PHONE));
+        String role = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_USER_ROLE));
+        String bio = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_USER_BIO));
+        String avatarUrl = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_USER_AVATAR_URL));
+
+        return new User(id, email, fullName, phone, role, bio, avatarUrl);
+    }
 }
