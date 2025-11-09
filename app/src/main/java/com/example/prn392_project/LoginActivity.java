@@ -20,11 +20,12 @@ public class LoginActivity extends AppCompatActivity {
     private TextView tvRegisterLink;
 
     private UserDatabaseDAO userDatabaseDAO;
-
+    private SessionManager sessionManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        sessionManager = new SessionManager(getApplicationContext());
 
         // Khởi tạo DAO
         userDatabaseDAO = new UserDatabaseDAO(this);
@@ -73,24 +74,23 @@ public class LoginActivity extends AppCompatActivity {
 
         if (user != null) {
             // Đăng nhập thành công
-            Toast.makeText(this, "Đăng nhập thành công! Welcome " + user.getFullName(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
 
-            // --- QUAN TRỌNG: Lưu phiên đăng nhập ---
-            // (Bạn nên tạo một lớp SessionManager dùng SharedPreferences ở đây)
-            // Ví dụ: SessionManager.getInstance(this).createLoginSession(user.getId(), user.getEmail(), user.getRole());
+            // --- QUAN TRỌNG: TẠO SESSION ---
+            sessionManager.createLoginSession(user);
 
             // --- Điều hướng dựa trên vai trò ---
             if (user.getRole().equals("artist")) {
-                // Tới màn hình Artist Dashboard
-                // Intent intent = new Intent(LoginActivity.this, ArtistDashboardActivity.class);
-                // startActivity(intent);
+                // TỚI MÀN HÌNH ARTIST DASHBOARD
+                Intent intent = new Intent(LoginActivity.this, ArtistDashboardActivity.class);
+                startActivity(intent);
             } else {
-                // Tới màn hình Customer Home (Màn hình chính)
+                // Tới màn hình Customer Home
                 // Intent intent = new Intent(LoginActivity.this, CustomerHomeActivity.class);
                 // startActivity(intent);
             }
 
-            // finish(); // Đóng LoginActivity để người dùng không back lại được
+            finish(); // Đóng LoginActivity
 
         } else {
             // Đăng nhập thất bại

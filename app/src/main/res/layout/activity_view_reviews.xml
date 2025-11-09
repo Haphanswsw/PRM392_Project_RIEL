@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ViewReviewsActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Đánh giá của bạn"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="16dp"
+        android:layout_marginBottom="16dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="16dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="16dp">
+        <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ĐÁNH GIÁ TRUNG BÌNH"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="?android:attr/textColorSecondary"/>
+
+        <TextView
+            android:id="@+id/tvAverageRatingText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="4.5/5"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="?android:attr/textColorPrimary"
+            android:layout_marginTop="8dp"/>
+
+        <RatingBar
+            android:id="@+id/rbAverageRating"
+            style="?android:attr/ratingBarStyleIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:rating="4.5"
+            android:isIndicator="true"
+            android:layout_marginTop="8dp"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tất cả đánh giá"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:paddingHorizontal="16dp"
+        android:layout_marginBottom="8dp"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvReviews"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingHorizontal="16dp"
+            android:clipToPadding="false"
+            tools:listitem="@layout/list_item_review"/>
+
+        <TextView
+            android:id="@+id/tvNoReviews"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bạn chưa có đánh giá nào."
+            android:textSize="16sp"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
+    </FrameLayout>
+
+</LinearLayout>

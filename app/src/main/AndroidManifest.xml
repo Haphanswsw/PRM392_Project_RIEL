@@ -16,6 +16,26 @@
         <activity android:name=".RegisterActivity"
             android:exported="false"/>
         <activity
+            android:name=".ArtistDashboardActivity"
+            android:label="Bảng điều khiển Nghệ sĩ"
+            android:exported="false"/>
+        <activity
+            android:name=".ManageProfileActivity"
+            android:label="Quản lý Hồ sơ"
+            android:exported="false"/>
+        <activity
+            android:name=".ManageBookingsActivity"
+            android:label="Quản lý Yêu cầu"
+            android:exported="false"/>
+        <activity
+            android:name=".ManageAvailabilityActivity"
+            android:label="Quản lý Lịch rảnh"
+            android:exported="false"/>
+        <activity
+            android:name=".ViewReviewsActivity"
+            android:label="Đánh giá của tôi"
+            android:exported="false"/>
+        <activity
             android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
